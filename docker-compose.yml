@@ -1,0 +1,49 @@
+services:
+  cloud189-checkin:
+    image: ghcr.io/${GITHUB_REPOSITORY:-zack-zzq/cloud189checkin}:latest
+    container_name: cloud189-checkin
+    restart: unless-stopped
+    environment:
+      # Timezone setting (default: Asia/Shanghai)
+      - TZ=Asia/Shanghai
+      # Cron schedule (default: 10:35 AM every day)
+      # Format: minute hour day month weekday
+      - CRON_SCHEDULE=35 10 * * *
+      # Whether to run checkin immediately on container start
+      - RUN_IMMEDIATELY=true
+      # Account configuration (choose one method)
+      # Method 1: JSON format for multiple accounts
+      # - TY_ACCOUNTS=[{"userName":"account1","password":"password1"},{"userName":"account2","password":"password2"}]
+      # Method 2: Individual account variables
+      - TY_USERNAME_1=${TY_USERNAME_1}
+      - TY_PASSWORD_1=${TY_PASSWORD_1}
+      # - TY_USERNAME_2=${TY_USERNAME_2}
+      # - TY_PASSWORD_2=${TY_PASSWORD_2}
+      # Push notification settings (optional)
+      # Server酱
+      - SENDKEY=${SENDKEY:-}
+      # Telegram
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID:-}
+      # 企业微信机器人
+      - WECOM_BOT_KEY=${WECOM_BOT_KEY:-}
+      - WECOM_BOT_TELPHONE=${WECOM_BOT_TELPHONE:-}
+      # WxPusher
+      - WX_PUSHER_APP_TOKEN=${WX_PUSHER_APP_TOKEN:-}
+      - WX_PUSHER_UID=${WX_PUSHER_UID:-}
+      # PushPlus
+      - PUSH_PLUS_TOKEN=${PUSH_PLUS_TOKEN:-}
+      # ShowDoc
+      - SHOWDOC_KEY=${SHOWDOC_KEY:-}
+      # Bark
+      - BARK_KEY=${BARK_KEY:-}
+      - BARK_SERVER=${BARK_SERVER:-}
+    volumes:
+      # Persist token for session reuse
+      - cloud189-token:/app/.token
+      # Optional: persist logs
+      - cloud189-logs:/app/.logs
+
+volumes:
+  cloud189-token:
+  cloud189-logs:

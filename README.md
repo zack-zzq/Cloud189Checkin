@@ -11,6 +11,7 @@
 # **目录**
 
 - [GitHub Action 运行](#GitHubAction运行)
+- [Docker 运行](#Docker运行)
 - [本地运行](#本地运行)
 - [设置推送](#设置推送)
 - [玄武-青龙面板](#玄武-青龙面板)
@@ -104,6 +105,111 @@
 
 Actions > Cloud check in action > build
 ![](https://cdn.jsdelivr.net/gh/wes-lin/Cloud189Checkin/image/action.png)
+
+## Docker 运行
+
+支持 `amd64` 和 `arm64` 架构，可在 x86 服务器和 ARM 设备（如树莓派、Mac M系列）上运行。
+
+镜像地址：`ghcr.io/zack-zzq/cloud189checkin`
+
+> **提示**: 生产环境建议使用特定版本标签（如 `ghcr.io/zack-zzq/cloud189checkin:v1.0.0`）而非 `latest` 标签，以确保部署的稳定性和可预测性。
+
+### 使用 Docker Compose（推荐）
+
+1. 创建 `docker-compose.yml` 文件：
+
+```yaml
+services:
+  cloud189-checkin:
+    image: ghcr.io/zack-zzq/cloud189checkin:latest
+    container_name: cloud189-checkin
+    restart: unless-stopped
+    environment:
+      # 时区设置
+      - TZ=Asia/Shanghai
+      # 定时任务计划（默认每天上午10:35执行）
+      - CRON_SCHEDULE=35 10 * * *
+      # 是否在容器启动时立即执行一次签到
+      - RUN_IMMEDIATELY=true
+      # 账号配置（选择其中一种方式）
+      # 方式一：JSON格式配置多账号
+      # - TY_ACCOUNTS=[{"userName":"账号1","password":"密码1"},{"userName":"账号2","password":"密码2"}]
+      # 方式二：单独配置每个账号
+      - TY_USERNAME_1=你的账号
+      - TY_PASSWORD_1=你的密码
+      # 推送通知设置（可选）
+      - SENDKEY=
+      - TELEGRAM_BOT_TOKEN=
+      - TELEGRAM_CHAT_ID=
+    volumes:
+      # 持久化token，避免重复登录
+      - cloud189-token:/app/.token
+      # 持久化日志（可选）
+      - cloud189-logs:/app/.logs
+
+volumes:
+  cloud189-token:
+  cloud189-logs:
+```
+
+2. 启动容器：
+
+```bash
+docker-compose up -d
+```
+
+3. 查看日志：
+
+```bash
+docker-compose logs -f
+```
+
+### 使用 Docker 命令行
+
+```bash
+docker run -d \
+  --name cloud189-checkin \
+  --restart unless-stopped \
+  -e TZ=Asia/Shanghai \
+  -e CRON_SCHEDULE="35 10 * * *" \
+  -e RUN_IMMEDIATELY=true \
+  -e TY_USERNAME_1=你的账号 \
+  -e TY_PASSWORD_1=你的密码 \
+  -v cloud189-token:/app/.token \
+  ghcr.io/zack-zzq/cloud189checkin:latest
+```
+
+### 环境变量说明
+
+| 变量名 | 说明 | 默认值 |
+|--------|------|--------|
+| `TZ` | 时区 | `Asia/Shanghai` |
+| `CRON_SCHEDULE` | 定时任务cron表达式 | `35 10 * * *` (每天10:35) |
+| `RUN_IMMEDIATELY` | 容器启动时是否立即执行 | `true` |
+| `TY_ACCOUNTS` | JSON格式账号配置 | - |
+| `TY_USERNAME_n` | 第n个账号用户名 | - |
+| `TY_PASSWORD_n` | 第n个账号密码 | - |
+
+推送通知相关环境变量请参考 [设置推送](#设置推送) 章节。
+
+### 本地构建镜像
+
+```bash
+# 克隆项目
+git clone https://github.com/zack-zzq/Cloud189Checkin.git
+cd Cloud189Checkin
+
+# 构建镜像
+docker build -t cloud189-checkin .
+
+# 运行
+docker run -d \
+  --name cloud189-checkin \
+  -e TY_USERNAME_1=你的账号 \
+  -e TY_PASSWORD_1=你的密码 \
+  -v cloud189-token:/app/.token \
+  cloud189-checkin
+```
 
 ## 本地运行
 
