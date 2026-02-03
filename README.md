@@ -94,6 +94,15 @@
 - `可选` 支持自定义 server, 配置成 BARK_SERVER ，默认为官方通道 https://api.day.app
 - 免费、开源、轻量；使用苹果 APNS 服务，及时、稳定、可靠；不会消耗设备的电量，基于系统推送服务与推送扩展，app 本体并不需要运行；隐私安全，可以通过一些方式确保包含作者本人在内的所有人都无法窃取你的隐私
 
+### Gotify 推送
+
+- `GOTIFY_URL` _Gotify 服务器地址（例如：https://gotify.example.com）_
+- `GOTIFY_TOKEN` _Gotify 应用 Token_
+- `可选` `GOTIFY_PRIORITY` _消息优先级（默认为 5）_
+- Gotify 官网：https://gotify.net/
+- 自建 Gotify 服务器后，创建应用并获取 Token，将 GOTIFY_URL 配置为服务器地址，GOTIFY_TOKEN 配置为应用 Token
+- 开源、自托管、支持多平台；可完全控制自己的数据
+
 ### 执行任务
 
 1. 点击**Action**，再点击**I understand my workflows, go ahead and enable them**
