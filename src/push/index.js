@@ -191,8 +191,7 @@ const pushGotify = (title, desp) => {
     priority: gotify.priority,
   };
   superagent
-    .post(`${gotify.url}/message`)
-    .set("X-Gotify-Key", gotify.token)
+    .post(`${gotify.url}/message?token=${gotify.token}`)
     .send(data)
     .then((res) => {
       if (res.body?.id) {
