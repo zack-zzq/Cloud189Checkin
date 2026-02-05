@@ -99,6 +99,7 @@
 - `GOTIFY_URL` _Gotify 服务器地址_（例如：`https://gotify.example.com`）
 - `GOTIFY_TOKEN` _Gotify 应用的 Token_
 - `可选` `GOTIFY_PRIORITY` _消息优先级_（默认为 5，范围 1-10）
+- `可选` `GOTIFY_TITLE` _自定义推送标题_（默认使用系统标题 "天翼云盘自动签到任务"）
 - Gotify 官网：https://gotify.net/
 - Gotify 是一个自托管的推送通知服务，需要自行部署 Gotify 服务器
 - 在 Gotify 服务器中创建应用，获取应用 Token 后，配置 GOTIFY_URL 和 GOTIFY_TOKEN

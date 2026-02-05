@@ -186,7 +186,7 @@ const pushGotify = (title, desp) => {
     return;
   }
   const data = {
-    title: title,
+    title: gotify.title || title,
     message: desp,
     priority: gotify.priority,
   };
