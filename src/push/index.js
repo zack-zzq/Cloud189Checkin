@@ -7,6 +7,7 @@ const wxpush = require("./wxPusher");
 const pushPlus = require("./pushPlus");
 const bark = require("./bark");
 const showDoc = require("./showDoc");
+const gotify = require("./gotify");
 
 const logger = log4js.getLogger("push");
 logger.addContext("user", "push");
@@ -180,6 +181,30 @@ const pushShowDoc = (title, desp) => {
     });
 };
 
+const pushGotify = (title, desp) => {
+  if (!(gotify.url && gotify.token)) {
+    return;
+  }
+  const data = {
+    title: title,
+    message: desp,
+    priority: gotify.priority,
+  };
+  superagent
+    .post(`${gotify.url}/message?token=${gotify.token}`)
+    .send(data)
+    .then((res) => {
+      if (res.body?.id) {
+        logger.info("Gotify推送成功");
+      } else {
+        logger.error(`Gotify推送失败: ${JSON.stringify(res.body)}`);
+      }
+    })
+    .catch((err) => {
+      logger.error(`Gotify推送失败: ${JSON.stringify(err)}`);
+    });
+};
+
 const push = (title, desp) => {
   pushServerChan(title, desp);
   pushTelegramBot(title, desp);
@@ -188,6 +213,7 @@ const push = (title, desp) => {
   pushPlusPusher(title, desp);
   pushBark(title, desp);
   pushShowDoc(title, desp);
+  pushGotify(title, desp);
 };
 
 module.exports = push;

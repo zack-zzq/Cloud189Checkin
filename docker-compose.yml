@@ -38,6 +38,10 @@ services:
       # Bark
       - BARK_KEY=${BARK_KEY:-}
       - BARK_SERVER=${BARK_SERVER:-}
+      # Gotify
+      - GOTIFY_URL=${GOTIFY_URL:-}
+      - GOTIFY_TOKEN=${GOTIFY_TOKEN:-}
+      - GOTIFY_PRIORITY=${GOTIFY_PRIORITY:-}
     volumes:
       # Persist token for session reuse
       - cloud189-token:/app/.token
